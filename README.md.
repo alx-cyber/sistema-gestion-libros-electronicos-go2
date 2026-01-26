@@ -1,1 +1,53 @@
+Sistema de Gestión de Libros Electrónicos
+Descripción del proyecto
+Este proyecto consiste en el desarrollo de un Sistema de Gestión de Libros Electrónicos, implementado como una aplicación de consola utilizando el lenguaje de programación Go.
+El sistema permite administrar información básica de una biblioteca digital, aplicando los conceptos fundamentales vistos en la Unidad 1 de la materia Programación Orientada a Objetos, con un enfoque en programación funcional.
+El proyecto es desarrollado de manera individual como parte de una actividad evaluativa universitaria.
+
+Objetivo del sistema
+El objetivo principal del sistema es facilitar la gestión de libros electrónicos mediante funcionalidades que permitan:
+
+Registrar libros electrónicos
+Listar libros disponibles
+Buscar libros por título o autor
+Editar información de libros
+Eliminar libros del sistema
+
+el proyecto busca reforzar el uso de funciones, estructuras de control y buenas prácticas de organización del código en Go.
+
+Alcance del proyecto
+El sistema incluye:
+Gestión básica de libros electrónicos
+Menú interactivo por consola
+Organización modular del código
+Aplicación de programación funcional
+
+El sistema no incluye:
+Interfaz gráfica
+Persistencia en bases de datos
+Descarga real de libros
+Autenticación avanzada de usuarios
+
+Tecnologías utilizadas
+Lenguaje de programación: Go
+Paradigma: Programación funcional
+Entorno: Aplicación de consola
+Estructura del proyecto
+
+El proyecto está organizado de la siguiente manera:
+main.go: Punto de entrada del sistema y control del flujo principal
+models/: Definición de estructuras de datos (Libro, Usuario)
+services/: Lógica funcional del sistema
+utils/: Funciones auxiliares para entrada de datos
+docs/: Documentación del proyecto
+Esta estructura facilita la modularidad, el mantenimiento y la reutilización del código.
+
+Paquetes utilizados
+Se utilizan únicamente paquetes estándar de Go:
+fmt
+bufio
+os
+strings
+
+No se emplean paquetes de terceros.
 
