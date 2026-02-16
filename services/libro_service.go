@@ -1,78 +1,41 @@
 package services
 
 import (
-	"bufio"
-	"fmt"
-	"os"
-	"sistema/models"
+	"errors"
+	"github.com/alx-cyber/sistema-gestion-libros-electronicos-go2/models"
 )
 
-func RegistrarLibro(libros []models.Libro) []models.Libro {
-	reader := bufio.NewReader(os.Stdin)
-
-	var libro models.Libro
-
-	fmt.Print("Título: ")
-	libro.Titulo, _ = reader.ReadString('\n')
-
-	fmt.Print("Autor: ")
-	libro.Autor, _ = reader.ReadString('\n')
-
-	fmt.Print("Año: ")
-	fmt.Scanln(&libro.Anio)
-
-	fmt.Print("ISBN: ")
-	fmt.Scanln(&libro.ISBN)
-
-	libros = append(libros, libro)
-	fmt.Println("Libro registrado correctamente")
-
-	return libros
+// SistemaGestion administra los libros usando un map.
+type SistemaGestion struct {
+	libros map[int]*models.Libro
 }
 
-func ListarLibros(libros []models.Libro) {
-	if len(libros) == 0 {
-		fmt.Println("No hay libros registrados")
-		return
-	}
-
-	for i, libro := range libros {
-		fmt.Printf("%d. %s - %s (%d)\n", i+1, libro.Titulo, libro.Autor, libro.Anio)
+// NuevoSistema crea una nueva instancia del sistema.
+func NuevoSistema() *SistemaGestion {
+	return &SistemaGestion{
+		libros: make(map[int]*models.Libro),
 	}
 }
 
-func BuscarLibro(libros []models.Libro) {
-	var titulo string
-	fmt.Print("Ingrese el título a buscar: ")
-	fmt.Scanln(&titulo)
+// AgregarLibro agrega un libro al sistema.
+func (s *SistemaGestion) AgregarLibro(libro *models.Libro) error {
 
-	for _, libro := range libros {
-		if libro.Titulo == titulo {
-			fmt.Println("Libro encontrado:")
-			fmt.Println("Título:", libro.Titulo)
-			fmt.Println("Autor:", libro.Autor)
-			fmt.Println("Año:", libro.Anio)
-			fmt.Println("ISBN:", libro.ISBN)
-			return
-		}
+	if _, existe := s.libros[libro.ID()]; existe {
+		return errors.New("el libro ya existe")
 	}
-	fmt.Println("Libro no encontrado")
+
+	s.libros[libro.ID()] = libro
+	return nil
 }
 
-func EliminarLibro(libros []models.Libro) []models.Libro {
-	var isbn string
-	fmt.Print("Ingrese el ISBN del libro a eliminar: ")
-	fmt.Scanln(&isbn)
+// BuscarLibro busca un libro por su ID.
+func (s *SistemaGestion) BuscarLibro(id int) (*models.Libro, error) {
 
-	for i, libro := range libros {
-		if libro.ISBN == isbn {
-			libros = append(libros[:i], libros[i+1:]...)
-			fmt.Println("Libro eliminado")
-			return libros
-		}
+	libro, existe := s.libros[id]
+
+	if !existe {
+		return nil, errors.New("libro no encontrado")
 	}
-	fmt.Println("Libro no encontrado")
-	return libros
+
+	return libro, nil
 }
-
-
