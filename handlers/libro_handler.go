@@ -119,6 +119,13 @@ func (h *LibroHandler) EliminarLibro(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}
+	func (h *LibroHandler) TotalLibros(w http.ResponseWriter, r *http.Request) {
+
+	total := h.Gestor.TotalLibros()
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]int{"total": total})
+}
 
 	w.WriteHeader(http.StatusOK)
 }
