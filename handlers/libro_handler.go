@@ -3,17 +3,35 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"github.com/alx-cyber/sistema-gestion-libros-electronicos-go2/interfaces"
+	"github.com/alx-cyber/sistema-gestion-libros-electronicos-go2/models"
 )
 
 type LibroHandler struct {
 	Gestor interfaces.GestorLibros
 }
 
+// GET /libros
+func (h *LibroHandler) ListarLibros(w http.ResponseWriter, r *http.Request) {
+
+	libros := h.Gestor.ListarLibros()
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(libros)
+}
+
+// GET /libro?id=1
 func (h *LibroHandler) BuscarLibro(w http.ResponseWriter, r *http.Request) {
 
-	id := 1 // por ahora fijo para probar
+	idStr := r.URL.Query().Get("id")
+	id, err := strconv.Atoi(idStr)
+
+	if err != nil {
+		http.Error(w, "ID inválido", http.StatusBadRequest)
+		return
+	}
 
 	libro, err := h.Gestor.BuscarLibro(id)
 
@@ -24,4 +42,37 @@ func (h *LibroHandler) BuscarLibro(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(libro)
+}
+
+// POST /libros
+func (h *LibroHandler) CrearLibro(w http.ResponseWriter, r *http.Request) {
+
+	var datos struct {
+		ID     int    `json:"id"`
+		Titulo string `json:"titulo"`
+		Autor  string `json:"autor"`
+	}
+
+	err := json.NewDecoder(r.Body).Decode(&datos)
+
+	if err != nil {
+		http.Error(w, "JSON inválido", http.StatusBadRequest)
+		return
+	}
+
+	libro, err := models.NuevoLibro(datos.ID, datos.Titulo, datos.Autor)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	err = h.Gestor.AgregarLibro(libro)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	w.WriteHeader(http.StatusCreated)
 }
