@@ -56,4 +56,17 @@ func (s *SistemaGestion) AgregarLibroConcurrente(libro *models.Libro, ch chan st
 
 	ch <- "Libro agregado correctamente"
 }
+func (s *SistemaGestion) ListarLibros() []*models.Libro {
+
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	var lista []*models.Libro
+
+	for _, libro := range s.libros {
+		lista = append(lista, libro)
+	}
+
+	return lista
+}
 
