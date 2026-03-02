@@ -1,7 +1,10 @@
 package main
 
 import (
-	"fmt"
+	"log"
+	"net/http"
+
+	"github.com/alx-cyber/sistema-gestion-libros-electronicos-go2/handlers"
 	"github.com/alx-cyber/sistema-gestion-libros-electronicos-go2/interfaces"
 	"github.com/alx-cyber/sistema-gestion-libros-electronicos-go2/models"
 	"github.com/alx-cyber/sistema-gestion-libros-electronicos-go2/services"
@@ -9,32 +12,18 @@ import (
 
 func main() {
 
-	// Usamos la interfaz como tipo
 	var gestor interfaces.GestorLibros = services.NuevoSistema()
 
-	// Crear libro usando constructor
-	libro1, err := models.NuevoLibro(1, "Programacion en Go", "Alex")
+	// Crear libro de prueba
+	libro1, _ := models.NuevoLibro(1, "Programacion en Go", "Alex")
+	gestor.AgregarLibro(libro1)
 
-	if err != nil {
-		fmt.Println("Error:", err)
-		return
+	handler := &handlers.LibroHandler{
+		Gestor: gestor,
 	}
 
-	// Agregar libro
-	err = gestor.AgregarLibro(libro1)
+	http.HandleFunc("/libro", handler.BuscarLibro)
 
-	if err != nil {
-		fmt.Println("Error:", err)
-		return
-	}
-
-	// Buscar libro
-	libroEncontrado, err := gestor.BuscarLibro(1)
-
-	if err != nil {
-		fmt.Println("Error:", err)
-		return
-	}
-
-	fmt.Println("Libro encontrado:", libroEncontrado.Titulo())
+	log.Println("Servidor ejecutándose en http://localhost:8080")
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
