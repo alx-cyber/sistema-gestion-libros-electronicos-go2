@@ -6,5 +6,5 @@ import "github.com/alx-cyber/sistema-gestion-libros-electronicos-go2/models"
 type GestorLibros interface {
 	AgregarLibro(libro *models.Libro) error
 	BuscarLibro(id int) (*models.Libro, error)
+	AgregarLibroConcurrente(libro *models.Libro, ch chan string)
 }
-AgregarLibroConcurrente(libro *models.Libro, ch chan string)
