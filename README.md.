@@ -1,53 +1,145 @@
 Sistema de Gestión de Libros Electrónicos
-Descripción del proyecto
-Este proyecto consiste en el desarrollo de un Sistema de Gestión de Libros Electrónicos, implementado como una aplicación de consola utilizando el lenguaje de programación Go.
-El sistema permite administrar información básica de una biblioteca digital, aplicando los conceptos fundamentales vistos en la Unidad 1 de la materia Programación Orientada a Objetos, con un enfoque en programación funcional.
-El proyecto es desarrollado de manera individual como parte de una actividad evaluativa universitaria.
+Autor: Humberto Macas
+Carrera: Ingenieria en Ciberseguridad
+Año: 2026
+1. Introducción
+El presente proyecto consiste en el desarrollo de un Sistema de Gestión de Libros Electrónicos,  implementado en el lenguaje de programación Go.
+El sistema inició como una aplicación de consola aplicando los conceptos fundamentales de la Unidad 1 (Programación Orientada a Objetos con enfoque funcional) y evolucionó progresivamente hasta convertirse en una, aplicación Web con concurrencia y servicios REST, integrando los conocimientos de las cuatro unidades de la asignatura.
+2. Objetivo del Sistema
+El objetivo principal es facilitar la gestión de libros electrónicos mediante funcionalidades que permitan:
+•	Registrar libros electrónicos
+•	Listar libros disponibles
+•	Buscar libros por ID
+•	Editar información de libros
+•	Eliminar libros del sistema
+•	Gestionar operaciones concurrentes
+•	Exponer funcionalidades mediante servicios web
+Además, el proyecto busca reforzar:
+•	Uso de funciones
+•	Aplicación de POO en Go
+•	Uso de interfaces
+•	Encapsulación
+•	Manejo de concurrencia
+•	Serialización JSON
+•	Desarrollo de APIs REST
+•	
 
-Objetivo del sistema
-El objetivo principal del sistema es facilitar la gestión de libros electrónicos mediante funcionalidades que permitan:
+ 3. Evolución del Proyecto (Integración de las 4 Unidades)
+Unidad 1 – Fundamentos y POO
+•	Estructuración del proyecto
+•	Creación del modelo `Libro`
+•	Encapsulación de atributos
+•	Uso de métodos
+•	Organización modular
+Unidad 2 – Estructura y Mejoras
+•	Implementación de interfaces
+•	Separación por capas (models, services, interfaces)
+•	Manejo de errores
+•	Mejora en organización del código
+Unidad 3 – Diseño y Buenas Prácticas
+•	Modularización avanzada
+•	Preparación para escalabilidad
+•	Mejoras en cohesión y bajo acoplamiento
+Unidad 4 – Concurrencia, Testing y Web
+•	Implementación de Goroutines
+•	Uso de Canales (chan)
+•	Uso de sync.Mutex
+•	Creación de Servicios Web REST
+•	Serialización JSON
+•	Endpoints HTTP
+•	Preparación para testing
+4. Arquitectura del Proyecto: El proyecto está organizado por capas:
+main.go
+interfaces/
+models/
+services/
+handlers/
+README.md
 
-Registrar libros electrónicos
-Listar libros disponibles
-Buscar libros por título o autor
-Editar información de libros
-Eliminar libros del sistema
+Descripción de Carpetas
+Models: Contiene las estructuras del dominio (`Libro`) aplicando encapsulación.
+Interfaces: Define los contratos que debe cumplir el sistema (`GestorLibros`).
+Services: Contiene la lógica de negocio y manejo concurrente del sistema.
+Handlers: Implementa los endpoints HTTP y la serialización JSON.
 
-el proyecto busca reforzar el uso de funciones, estructuras de control y buenas prácticas de organización del código en Go.
+5. Servicios Web Implementados
+El sistema implementa los siguientes endpoints REST:
+Método	Endpoint	Descripción
+GET	/libros        	Lista todos los libros       
+GET	/libro?id=1    	Busca un libro por ID        
+POST	/crear         	Crea un nuevo libro          
+PUT    	/actualizar    	Actualiza un libro           
+DELETE	/eliminar?id=1	Elimina un libro             
+GET	/health        	Verifica estado del servidor
+GET	/total         	Retorna total de libros      
+GET	/concurrente   	Prueba de concurrencia       
 
-Alcance del proyecto
-El sistema incluye:
-Gestión básica de libros electrónicos
-Menú interactivo por consola
-Organización modular del código
-Aplicación de programación funcional
+La comunicación se realiza mediante JSON (serialización con encoding/json).
 
-El sistema no incluye:
-Interfaz gráfica
-Persistencia en bases de datos
-Descarga real de libros
-Autenticación avanzada de usuarios
+6. Concurrencia Implementada
+El sistema aplica los siguientes conceptos:
+•	Goroutines
+•	Canales (`chan`)
+•	`sync.Mutex`
+•	Protección de recursos compartidos
+Se garantiza acceso seguro al mapa interno de libros evitando condiciones de carrera.
 
-Tecnologías utilizadas
-Lenguaje de programación: Go
-Paradigma: Programación funcional
-Entorno: Aplicación de consola
-Estructura del proyecto
 
-El proyecto está organizado de la siguiente manera:
-main.go: Punto de entrada del sistema y control del flujo principal
-models/: Definición de estructuras de datos (Libro, Usuario)
-services/: Lógica funcional del sistema
-utils/: Funciones auxiliares para entrada de datos
-docs/: Documentación del proyecto
-Esta estructura facilita la modularidad, el mantenimiento y la reutilización del código.
 
-Paquetes utilizados
-Se utilizan únicamente paquetes estándar de Go:
-fmt
-bufio
-os
-strings
+7. Testing
+El sistema está preparado para implementar:
+•	Pruebas unitarias
+•	Pruebas de integración
+•	Validación de errores HTTP
+Las pruebas permiten verificar:
+•	Correcta inserción de libros
+•	Manejo de errores
+•	Comportamiento en concurrencia
+ 8. Análisis del Software
+El sistema presenta:
+•	Alta cohesión
+•	Bajo acoplamiento (uso de interfaces)
+•	Arquitectura modular
+•	Separación clara de responsabilidades
+•	Seguridad en entornos concurrentes
+Se observa una evolución estructural desde aplicación de consola hacia arquitectura web escalable.
+9. Alcance y Limitaciones
+Incluye:
+•	Gestión completa CRUD de libros
+•	Servicios Web REST
+•	Concurrencia
+•	Organización modular
+•	Manejo de errores
+No incluye:
+•	Base de datos persistente
+•	Interfaz gráfica
+•	Autenticación JWT
+•	Despliegue en nube
+•	Actualmente el almacenamiento es en memoria.
 
-No se emplean paquetes de terceros.
+10. Visualización del Futuro
+Este sistema puede evolucionar hacia:
+•	Integración con base de datos (PostgreSQL, MongoDB)
+•	Implementación de autenticación JWT
+•	Microservicios
+•	Dockerización
+•	Despliegue en AWS o Azure
+•	Sistema completo de biblioteca digital con usuarios y préstamos
+La arquitectura modular permite una transición sencilla hacia un entorno profesional.
+
+11. Toma de Decisiones
+•	Aplicar interfaces para reducir acoplamiento
+•	Separar responsabilidades por capas
+Estas decisiones mejoran mantenibilidad y escalabilidad.
+
+ 12. Conclusión
+El desarrollo de este proyecto permitió integrar progresivamente los conocimientos de las cuatro unidades de la materia.
+Se fortalecieron habilidades en:
+•	Diseño de software
+•	Arquitectura modular
+•	Programación concurrente
+•	Desarrollo de APIs REST
+•	Manejo de errores
+•	Serialización de datos
+
 
