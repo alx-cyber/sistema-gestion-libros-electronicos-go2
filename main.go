@@ -23,6 +23,7 @@ func main() {
 		http.HandleFunc("/actualizar", handler.ActualizarLibro)
 		http.HandleFunc("/eliminar", handler.EliminarLibro)
 		http.HandleFunc("/health", handler.Health)
+		http.HandleFunc("/concurrente", handler.PruebaConcurrente)
 	log.Println("Servidor ejecutándose en http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
