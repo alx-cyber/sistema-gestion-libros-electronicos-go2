@@ -10,4 +10,5 @@ type GestorLibros interface {
 	ActualizarLibro(libro *models.Libro) error
 	EliminarLibro(id int) error
 	AgregarLibroConcurrente(libro *models.Libro, ch chan string)
+	TotalLibros() int
 }
