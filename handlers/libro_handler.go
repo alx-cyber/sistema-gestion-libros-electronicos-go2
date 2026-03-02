@@ -76,3 +76,49 @@ func (h *LibroHandler) CrearLibro(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusCreated)
 }
+func (h *LibroHandler) ActualizarLibro(w http.ResponseWriter, r *http.Request) {
+
+	var datos struct {
+		ID     int    `json:"id"`
+		Titulo string `json:"titulo"`
+		Autor  string `json:"autor"`
+	}
+
+	err := json.NewDecoder(r.Body).Decode(&datos)
+	if err != nil {
+		http.Error(w, "JSON inválido", http.StatusBadRequest)
+		return
+	}
+
+	libro, err := models.NuevoLibro(datos.ID, datos.Titulo, datos.Autor)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	err = h.Gestor.ActualizarLibro(libro)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+func (h *LibroHandler) EliminarLibro(w http.ResponseWriter, r *http.Request) {
+
+	idStr := r.URL.Query().Get("id")
+	id, err := strconv.Atoi(idStr)
+
+	if err != nil {
+		http.Error(w, "ID inválido", http.StatusBadRequest)
+		return
+	}
+
+	err = h.Gestor.EliminarLibro(id)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
