@@ -46,3 +46,13 @@ func (s *SistemaGestion) BuscarLibro(id int) (*models.Libro, error) {
 
 	return libro, nil
 }
+func (s *SistemaGestion) AgregarLibroConcurrente(libro *models.Libro, ch chan string) {
+	err := s.AgregarLibro(libro)
+
+	if err != nil {
+		ch <- "Error: " + err.Error()
+		return
+	}
+
+	ch <- "Libro agregado correctamente"
+}
