@@ -17,10 +17,14 @@ func main() {
 		Gestor: gestor,
 	}
 
-	http.HandleFunc("/libros", handler.ListarLibros)
-	http.HandleFunc("/libro", handler.BuscarLibro)
-	http.HandleFunc("/crear", handler.CrearLibro)
+		http.HandleFunc("/libros", handler.ListarLibros)
+		http.HandleFunc("/libro", handler.BuscarLibro)
+		http.HandleFunc("/crear", handler.CrearLibro)
+		http.HandleFunc("/actualizar", handler.ActualizarLibro)
+		http.HandleFunc("/eliminar", handler.EliminarLibro)
 
 	log.Println("Servidor ejecutándose en http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
+
+
