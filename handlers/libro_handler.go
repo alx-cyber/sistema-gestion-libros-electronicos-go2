@@ -122,3 +122,6 @@ func (h *LibroHandler) EliminarLibro(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 }
+func (h *LibroHandler) Health(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Servidor funcionando correctamente"))
+}
