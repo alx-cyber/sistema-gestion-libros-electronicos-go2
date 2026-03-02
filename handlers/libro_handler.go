@@ -132,3 +132,19 @@ func (h *LibroHandler) EliminarLibro(w http.ResponseWriter, r *http.Request) {
 func (h *LibroHandler) Health(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Servidor funcionando correctamente"))
 }
+func (h *LibroHandler) PruebaConcurrente(w http.ResponseWriter, r *http.Request) {
+
+	ch := make(chan string)
+
+	libro1, _ := models.NuevoLibro(100, "Libro Concurrente 1", "Autor X")
+	libro2, _ := models.NuevoLibro(101, "Libro Concurrente 2", "Autor Y")
+
+	go h.Gestor.AgregarLibroConcurrente(libro1, ch)
+	go h.Gestor.AgregarLibroConcurrente(libro2, ch)
+
+	msg1 := <-ch
+	msg2 := <-ch
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode([]string{msg1, msg2})
+}
