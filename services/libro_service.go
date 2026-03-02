@@ -93,3 +93,10 @@ func (s *SistemaGestion) EliminarLibro(id int) error {
 	delete(s.libros, id)
 	return nil
 }
+func (s *SistemaGestion) TotalLibros() int {
+
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	return len(s.libros)
+}
