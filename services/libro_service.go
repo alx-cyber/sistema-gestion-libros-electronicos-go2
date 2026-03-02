@@ -56,3 +56,4 @@ func (s *SistemaGestion) AgregarLibroConcurrente(libro *models.Libro, ch chan st
 
 	ch <- "Libro agregado correctamente"
 }
+func (s *SistemaGestion) AgregarLibroConcurrente(...)
