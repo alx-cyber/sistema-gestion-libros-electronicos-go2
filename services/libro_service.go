@@ -69,4 +69,27 @@ func (s *SistemaGestion) ListarLibros() []*models.Libro {
 
 	return lista
 }
+func (s *SistemaGestion) ActualizarLibro(libro *models.Libro) error {
 
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	if _, existe := s.libros[libro.ID()]; !existe {
+		return errors.New("libro no existe")
+	}
+
+	s.libros[libro.ID()] = libro
+	return nil
+}
+func (s *SistemaGestion) EliminarLibro(id int) error {
+
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	if _, existe := s.libros[id]; !existe {
+		return errors.New("libro no encontrado")
+	}
+
+	delete(s.libros, id)
+	return nil
+}
