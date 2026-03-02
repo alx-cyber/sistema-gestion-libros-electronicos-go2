@@ -7,3 +7,4 @@ type GestorLibros interface {
 	AgregarLibro(libro *models.Libro) error
 	BuscarLibro(id int) (*models.Libro, error)
 }
+AgregarLibroConcurrente(libro *models.Libro, ch chan string)
