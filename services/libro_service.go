@@ -44,10 +44,12 @@ func (s *SistemaGestion) BuscarLibro(id int) (*models.Libro, error) {
 
 func (s *SistemaGestion) AgregarLibroConcurrente(libro *models.Libro, ch chan string) {
 	err := s.AgregarLibro(libro)
+
 	if err != nil {
 		ch <- "Error: " + err.Error()
 		return
 	}
+
 	ch <- "Libro agregado correctamente"
 }
 
@@ -59,6 +61,7 @@ func (s *SistemaGestion) ListarLibros() []*models.Libro {
 	for _, libro := range s.libros {
 		lista = append(lista, libro)
 	}
+
 	return lista
 }
 
