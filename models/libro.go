@@ -23,4 +23,3 @@ func NuevoLibro(id int, titulo string, autor string, anio int, isbn string) (*Li
 		ISBN:   isbn,
 	}, nil
 }
-
