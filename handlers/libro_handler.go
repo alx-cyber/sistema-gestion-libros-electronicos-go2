@@ -15,7 +15,6 @@ type LibroHandler struct {
 
 // GET /libros
 func (h *LibroHandler) ListarLibros(w http.ResponseWriter, r *http.Request) {
-
 	libros := h.Gestor.ListarLibros()
 
 	w.Header().Set("Content-Type", "application/json")
@@ -24,7 +23,6 @@ func (h *LibroHandler) ListarLibros(w http.ResponseWriter, r *http.Request) {
 
 // GET /libro?id=1
 func (h *LibroHandler) BuscarLibro(w http.ResponseWriter, r *http.Request) {
-
 	idStr := r.URL.Query().Get("id")
 	id, err := strconv.Atoi(idStr)
 
@@ -34,7 +32,6 @@ func (h *LibroHandler) BuscarLibro(w http.ResponseWriter, r *http.Request) {
 	}
 
 	libro, err := h.Gestor.BuscarLibro(id)
-
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
@@ -51,24 +48,23 @@ func (h *LibroHandler) CrearLibro(w http.ResponseWriter, r *http.Request) {
 		ID     int    `json:"id"`
 		Titulo string `json:"titulo"`
 		Autor  string `json:"autor"`
+		Anio   int    `json:"anio"`
+		ISBN   string `json:"isbn"`
 	}
 
 	err := json.NewDecoder(r.Body).Decode(&datos)
-
 	if err != nil {
 		http.Error(w, "JSON inválido", http.StatusBadRequest)
 		return
 	}
 
-	libro, err := models.NuevoLibro(datos.ID, datos.Titulo, datos.Autor)
-
+	libro, err := models.NuevoLibro(datos.ID, datos.Titulo, datos.Autor, datos.Anio, datos.ISBN)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	err = h.Gestor.AgregarLibro(libro)
-
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -76,12 +72,16 @@ func (h *LibroHandler) CrearLibro(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusCreated)
 }
+
+// PUT /libros
 func (h *LibroHandler) ActualizarLibro(w http.ResponseWriter, r *http.Request) {
 
 	var datos struct {
 		ID     int    `json:"id"`
 		Titulo string `json:"titulo"`
 		Autor  string `json:"autor"`
+		Anio   int    `json:"anio"`
+		ISBN   string `json:"isbn"`
 	}
 
 	err := json.NewDecoder(r.Body).Decode(&datos)
@@ -90,7 +90,7 @@ func (h *LibroHandler) ActualizarLibro(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	libro, err := models.NuevoLibro(datos.ID, datos.Titulo, datos.Autor)
+	libro, err := models.NuevoLibro(datos.ID, datos.Titulo, datos.Autor, datos.Anio, datos.ISBN)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -104,6 +104,8 @@ func (h *LibroHandler) ActualizarLibro(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 }
+
+// DELETE /libros?id=1
 func (h *LibroHandler) EliminarLibro(w http.ResponseWriter, r *http.Request) {
 
 	idStr := r.URL.Query().Get("id")
@@ -119,7 +121,12 @@ func (h *LibroHandler) EliminarLibro(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}
-	func (h *LibroHandler) TotalLibros(w http.ResponseWriter, r *http.Request) {
+
+	w.WriteHeader(http.StatusOK)
+}
+
+// GET /total
+func (h *LibroHandler) TotalLibros(w http.ResponseWriter, r *http.Request) {
 
 	total := h.Gestor.TotalLibros()
 
@@ -127,17 +134,18 @@ func (h *LibroHandler) EliminarLibro(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]int{"total": total})
 }
 
-	w.WriteHeader(http.StatusOK)
-}
+// GET /health
 func (h *LibroHandler) Health(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Servidor funcionando correctamente"))
 }
+
+// GET /prueba-concurrente
 func (h *LibroHandler) PruebaConcurrente(w http.ResponseWriter, r *http.Request) {
 
 	ch := make(chan string)
 
-	libro1, _ := models.NuevoLibro(100, "Libro Concurrente 1", "Autor X")
-	libro2, _ := models.NuevoLibro(101, "Libro Concurrente 2", "Autor Y")
+	libro1, _ := models.NuevoLibro(100, "Libro Concurrente 1", "Autor X", 2024, "123")
+	libro2, _ := models.NuevoLibro(101, "Libro Concurrente 2", "Autor Y", 2024, "456")
 
 	go h.Gestor.AgregarLibroConcurrente(libro1, ch)
 	go h.Gestor.AgregarLibroConcurrente(libro2, ch)
